@@ -113,7 +113,7 @@ export default function About() {
   We Built That Platform
 </span>
       
-    </div>
+      </div>
     
   );
 }
