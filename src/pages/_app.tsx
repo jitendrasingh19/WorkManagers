@@ -6,7 +6,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Navbar />
-      <div className="mt-10 transparent"> 
+      <div className=" transparent"> 
         <Component {...pageProps} />
       </div>
     </>

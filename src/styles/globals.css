@@ -24,3 +24,18 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+.chevron-right,
+.chevron-left {
+  width: 66px;
+  height: 66px;
+  border-top: 4px solid #c8102e;
+  border-right: 4px solid #c8102e;
+}
+
+.chevron-right {
+  transform: rotate(45deg);
+}
+
+.chevron-left {
+  transform: rotate(-135deg);
+}
