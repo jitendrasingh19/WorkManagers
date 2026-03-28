@@ -64,85 +64,109 @@ export default function SignUp() {
   }
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-          Create Your Account
-        </h1>
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background overlay */}
+      <div className="absolute inset-0 opacity-10 bg-gradient-to-br from-gray-800 to-gray-900"></div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      {/* Form Container */}
+      <div className="relative z-10 w-full max-w-md">
+        <div className="text-center mb-8">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <div className="w-24 h-24 rounded-full border-4 border-yellow-400 flex items-center justify-center bg-yellow-400 bg-opacity-10">
+              <span className="text-5xl font-bold text-yellow-400">💪</span>
+            </div>
+          </div>
+          <h1 className="text-4xl font-bold text-white mb-2">Welcome!</h1>
+          <p className="text-gray-400 mb-8">Create your gym account</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-gray-700 mb-1">Full Name</label>
+            <label className="block text-gray-300 text-sm uppercase tracking-widest mb-2">Full Name</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full p-3 border rounded-lg"
+              placeholder="Enter your full name"
+              className="w-full bg-transparent text-white placeholder-gray-500 pb-3 border-b-2 border-gray-600 focus:border-yellow-400 outline-none transition duration-300"
             />
           </div>
 
           <div>
-            <label className="block text-gray-700 mb-1">Email Address</label>
+            <label className="block text-gray-300 text-sm uppercase tracking-widest mb-2">Email</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full p-3 border rounded-lg"
+              placeholder="Enter your email address"
+              className="w-full bg-transparent text-white placeholder-gray-500 pb-3 border-b-2 border-gray-600 focus:border-yellow-400 outline-none transition duration-300"
             />
           </div>
 
           <div>
-            <label className="block text-gray-700 mb-1">Select Identity</label>
+            <label className="block text-gray-300 text-sm uppercase tracking-widest mb-2">Identity</label>
             <select
               name="identity"
               value={formData.identity}
               onChange={handleChange}
               required
-              className="w-full p-3 border rounded-lg"
+              className="w-full bg-transparent text-white pb-3 border-b-2 border-gray-600 focus:border-yellow-400 outline-none transition duration-300"
             >
-              <option value="">Select your identity</option>
-              <option value="admin">Admin</option>
-              <option value="manager">Manager</option>
-              <option value="team_member">Team Member</option>
-              <option value="user">User</option>
+              <option value="" className="bg-gray-800">Select your identity</option>
+              <option value="admin" className="bg-gray-800">Admin</option>
+              <option value="manager" className="bg-gray-800">Manager</option>
+              <option value="team_member" className="bg-gray-800">Team Member</option>
+              <option value="user" className="bg-gray-800">User</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-gray-700 mb-1">Password</label>
+            <label className="block text-gray-300 text-sm uppercase tracking-widest mb-2">Password</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full p-3 border rounded-lg"
+              placeholder="Enter your password"
+              className="w-full bg-transparent text-white placeholder-gray-500 pb-3 border-b-2 border-gray-600 focus:border-yellow-400 outline-none transition duration-300"
             />
           </div>
 
           <div>
-            <label className="block text-gray-700 mb-1">Confirm Password</label>
+            <label className="block text-gray-300 text-sm uppercase tracking-widest mb-2">Confirm Password</label>
             <input
               type="password"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
               required
-              className="w-full p-3 border rounded-lg"
+              placeholder="Confirm your password"
+              className="w-full bg-transparent text-white placeholder-gray-500 pb-3 border-b-2 border-gray-600 focus:border-yellow-400 outline-none transition duration-300"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold"
+            className="w-full bg-yellow-400 hover:bg-yellow-300 text-gray-900 py-3 font-bold text-lg uppercase tracking-widest transition duration-200 disabled:opacity-60 disabled:cursor-not-allowed mt-8"
           >
-            {loading ? "Creating account..." : "Create Account"}
+            {loading ? "Creating account..." : "SIGN UP"}
           </button>
+
+          <div className="text-center mt-6">
+            <p className="text-gray-400">
+              Already have an account?{" "}
+              <a href="/login" className="text-yellow-400 font-semibold hover:text-yellow-300">
+                Log In
+              </a>
+            </p>
+          </div>
         </form>
       </div>
     </div>

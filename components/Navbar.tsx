@@ -30,7 +30,7 @@ export default function Navbar() {
 
         <a
           href="/login"
-          className="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600 transition font-bold"
+          className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-bold transition-all duration-300 transform hover:scale-105"
         >
           Sign In
         </a>
