@@ -30,37 +30,37 @@ export default function SignUp() {
 
     setLoading(true)
 
-    // 1️⃣ Create auth user
-    const { data, error: signUpError } = await supabase.auth.signUp({
-      email: formData.email,
-      password: formData.password,
-    })
+    const role =
+      formData.identity === "manager"
+        ? "manager"
+        : formData.identity === "admin"
+        ? "admin"
+        : "member"
 
-    if (signUpError) {
-      setLoading(false)
-      alert(signUpError.message)
-      return
-    }
-
-    const userId = data.user?.id
-
-    // 2️⃣ Insert profile row
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .insert({
-        id: userId,
-        full_name: formData.name,
-        identity: formData.identity,
+    const res = await fetch("/api/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: formData.name,
         email: formData.email,
-      })
+        password: formData.password,
+        role,
+      }),
+    })
 
     setLoading(false)
 
-    if (profileError) {
-      alert(profileError.message)
-    } else {
-      alert("Account created! Check your email to verify.")
+    if (!res.ok) {
+      const err = await res.json()
+      alert(err.error || "Could not create user")
+      return
     }
+
+    alert("Account created! Now log in.")
+    window.location.href = "/login";
+
   }
 
   return (

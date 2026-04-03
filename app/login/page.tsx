@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
+import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,19 +15,32 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const res = await signIn("credentials", {
+      redirect: false,
       email,
       password,
     });
 
     setLoading(false);
 
-    if (error) {
+    if (res?.error) {
       alert("Invalid credentials");
+      return;
+    }
+
+    // Get session to check role
+    const sessionRes = await fetch("/api/auth/session");
+    const session = await sessionRes.json();
+
+    if (session?.user?.role === "admin") {
+      router.push("/admin-dashboard");
+    } else if (session?.user?.role === "manager") {
+      router.push("/manager-dashboard");
     } else {
       router.push("/dashboard");
     }
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#101828] p-6">
 
@@ -78,6 +91,7 @@ export default function LoginPage() {
 </button>
 
           </form>
+  
 
           <p className="text-xs text-gray-500 mt-4">
             Forgot your password?{" "}

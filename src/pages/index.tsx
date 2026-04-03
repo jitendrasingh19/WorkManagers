@@ -1,45 +1,94 @@
-import Image from "next/image"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+"use client";
+
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
 
 export default function Home() {
+  const images = [
+    "/images/worldgym.png",
+    "/images/gym4.jpg",
+    "/images/gym2.jpg",
+    "/images/gym3.jpg",
+  ];
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) =>
+      prev === images.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) =>
+      prev === 0 ? images.length - 1 : prev - 1
+    
+    );
+   
+  };
+  useEffect(() => {
+  const interval = setInterval(() => {
+    setCurrentSlide((prev) =>
+      prev === images.length - 1 ? 0 : prev + 1
+    );
+  }, 3000);
+
+  return () => clearInterval(interval);
+}, [images.length]);
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
       {/* Hero Section */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+  {images.map((_, index) => (
+    <button
+      key={index}
+      onClick={() => setCurrentSlide(index)}
+      className={`h-3 w-3 rounded-full ${
+        currentSlide === index ? "bg-white" : "bg-white/40"
+      }`}
+    />
+  ))}
+</div>
       <section className="relative w-full h-[80vh] flex items-center justify-center">
         
         {/* Background Image */}
-        <Image
-          src="/images/worldgym.png"
-          alt="Gym Background"
-          fill
-          priority
-          className="object-cover opacity-100"
-        />
+   <Image
+  key={currentSlide}
+  src={images[currentSlide]}
+  alt="Gym Background"
+  fill
+  priority
+  className="object-cover transition-opacity duration-1000 ease-in-out"
+/>
 
           <div className="absolute inset-0 bg-black/30" />
 
       {/* LEFT ARROW */}
       <button
-        className="absolute left-6 top-1/2 -translate-y-1/2 z-20
-                   bg-white/20 hover:bg-white/30
-                   backdrop-blur-md
-                   rounded-full p-3 transition"
-      >
+  onClick={prevSlide}
+  className="absolute left-6 top-1/2 -translate-y-1/2 z-20
+             bg-white/20 hover:bg-white/30
+             backdrop-blur-md rounded-full p-3 transition"
+>
         <ChevronLeft className="h-8 w-8 text-white" />
       </button>
 
+
       {/* RIGHT ARROW */}
-      <button
-        className="absolute right-6 top-1/2 -translate-y-1/2 z-20
-                   bg-white/20 hover:bg-white/30
-                   backdrop-blur-md
-                   rounded-full p-3 transition"
-      >
+ <button
+  onClick={nextSlide}
+  className="absolute right-6 top-1/2 -translate-y-1/2 z-20
+             bg-white/20 hover:bg-white/30
+             backdrop-blur-md rounded-full p-3 transition"
+>
         <ChevronRight className="h-8 w-8 text-white" />
       </button>
-<div className="arrw-bx hdn pd_h" data-v-4bf62ab4=""><h1 className="title-hero" data-v-4bf62ab4=""><span data-v-4bf62ab4="">BUILDING THE NEXT GENERATION OF LEGENDS</span></h1></div>
+
         {/* Optional overlay */}
-        <div className="absolute inset-0 bg-black/30" />
+        {/* <div className="absolute inset-0 bg-black/30" /> */}
 
         {/* Content */}
         <div className="relative z-10 max-w-5xl w-full px-6 flex flex-col md:flex-row items-center justify-between gap-10">
@@ -114,30 +163,69 @@ export default function Home() {
 </section>
 
 {/* Testimonials Section */}
-<section className="bg-gray-100 py-16">
+<section className="bg-gray-100 py-20">
   <div className="max-w-6xl mx-auto px-6 text-center">
-    <h2 className="text-3xl font-bold mb-8">What Our Members Say</h2>
+    <p className="text-sm uppercase tracking-[0.2em] text-gray-500 mb-2">
+      Testimonials
+    </p>
+
+    <h2 className="text-4xl md:text-5xl font-extrabold mb-12">
+      What Our Members Say
+    </h2>
+
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <p className="text-gray-600 mb-4">"World Gym has transformed my fitness journey. The trainers are amazing and the community is supportive."</p>
-        <p className="font-semibold">- Sarah Johnson</p>
+      {/* Card 1 */}
+      <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-2">
+        <p className="text-5xl font-bold text-gray-300 mb-4">“</p>
+        <p className="text-gray-600 leading-7 mb-6">
+          World Gym has transformed my fitness journey. The trainers are amazing and the community is supportive.
+        </p>
+        <div className="border-t pt-4">
+          <p className="font-bold text-lg">Sarah Johnson</p>
+          <p className="text-sm text-gray-400">Member</p>
+        </div>
       </div>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <p className="text-gray-600 mb-4">"I've never felt better. The variety of classes and equipment keeps me motivated every day."</p>
-        <p className="font-semibold">- Mike Chen</p>
+
+      {/* Card 2 */}
+      <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-2">
+        <p className="text-5xl font-bold text-gray-300 mb-4">“</p>
+        <p className="text-gray-600 leading-7 mb-6">
+          I've never felt better. The variety of classes and equipment keeps me motivated every day.
+        </p>
+        <div className="border-t pt-4">
+          <p className="font-bold text-lg">Mike Chen</p>
+          <p className="text-sm text-gray-400">Fitness Enthusiast</p>
+        </div>
       </div>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <p className="text-gray-600 mb-4">"Joining World Gym was the best decision I made for my health. Highly recommend!"</p>
-        <p className="font-semibold">- Emily Davis</p>
+
+      {/* Card 3 */}
+      <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-2">
+        <p className="text-5xl font-bold text-gray-300 mb-4">“</p>
+        <p className="text-gray-600 leading-7 mb-6">
+          Joining World Gym was the best decision I made for my health. Highly recommend!
+        </p>
+        <div className="border-t pt-4">
+          <p className="font-bold text-lg">Emily Davis</p>
+          <p className="text-sm text-gray-400">Premium Member</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
-
 {/* Footer Section */}
 <section className="bg-gray-900 text-white py-12">
+  <div>
+  <h1 className="text-center font-bold text-4xl m-9">
+    STAY INFORMED & GET FIT
+    
+  </h1>
+  <p className="text-center mb-7">Get the latest World Gym news, fitness tips, & exclusive offers delivered straight to your inbox.</p>
+  
+</div>
+ 
   <div className="max-w-6xl mx-auto px-6">
     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+       
       <div>
         <h3 className="text-lg font-bold mb-4">World Gym</h3>
         <p className="text-gray-400">

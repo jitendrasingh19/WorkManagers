@@ -1,9 +1,17 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 declare module "next-auth" {
   interface User {
     id: string;
+    role?: "admin" | "manager" | "member";
   }
 
   interface Session {
@@ -11,6 +19,7 @@ declare module "next-auth" {
       id: string;
       name: string;
       email: string;
+      role?: "admin" | "manager" | "member";
     };
   }
 }
@@ -18,6 +27,7 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     id: string;
+    role?: "admin" | "manager" | "member";
   }
 }
 
@@ -30,21 +40,29 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        if (
-          credentials?.email === "admin@gmail.com" &&
-          credentials?.password === "123456"
-        ) {
-          return {
-            id: "1",
-            email: "admin@gmail.com",
-            name: "Admin",
-          };
-        }
-        return null;
+        if (!credentials?.email || !credentials?.password) return null;
+
+        const { data: user } = await supabase
+          .from('users')
+          .select('*')
+          .eq('email', credentials.email)
+          .single();
+
+        if (!user) return null;
+
+        const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+        if (!isPasswordValid) return null;
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        };
       },
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || "default-super-secret",
   session: {
     strategy: "jwt",
   },
@@ -55,12 +73,14 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        if (user.role) token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
+        if (token.role) session.user.role = token.role as "admin" | "manager" | "member";
       }
       return session;
     },
