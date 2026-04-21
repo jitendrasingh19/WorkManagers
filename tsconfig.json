@@ -6,7 +6,9 @@
     "ignoreDeprecations": "6.0",
     "paths": {
       "@/*": ["./src/*"],
-      "@/components/*": ["./components/*"]
+      "@/components/*": ["./components/*"],
+      "@/auth": ["./src/auth.ts"],
+      "@/lib/*": ["./src/lib/*"]
     },
     "allowJs": true,
     "skipLibCheck": true,
