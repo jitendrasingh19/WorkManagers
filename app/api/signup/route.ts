@@ -41,5 +41,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  // ✅ Also create member profile if role is "member"
+  if (role === "member") {
+    const { error: memberError } = await supabase
+      .from('members')
+      .insert({
+        name,
+        email,
+        status: 'Active',
+        plan: 'Basic',
+      });
+
+    if (memberError) {
+      console.error("Error creating member profile:", memberError);
+      // Don't fail - user account is already created
+    }
+  }
+
   return NextResponse.json({ ok: true, user: data });
 }

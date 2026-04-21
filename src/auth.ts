@@ -40,25 +40,35 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        if (!credentials?.email || !credentials?.password) return null;
+        try {
+          if (!credentials?.email || !credentials?.password) return null;
 
-        const { data: user } = await supabase
-          .from('users')
-          .select('*')
-          .eq('email', credentials.email)
-          .single();
+          const { data: user, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', credentials.email)
+            .single();
 
-        if (!user) return null;
+          if (error) {
+            console.error('Supabase error:', error);
+            return null;
+          }
 
-        const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
-        if (!isPasswordValid) return null;
+          if (!user) return null;
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        };
+          const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+          if (!isPasswordValid) return null;
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
+        } catch (err) {
+          console.error('Auth error:', err);
+          return null;
+        }
       },
     }),
   ],
@@ -67,7 +77,7 @@ export const authOptions: AuthOptions = {
     strategy: "jwt",
   },
   pages: {
-    signIn: "/login",
+    signIn: "/login", // Default signIn page for admins/managers
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -83,6 +93,15 @@ export const authOptions: AuthOptions = {
         if (token.role) session.user.role = token.role as "admin" | "manager" | "member";
       }
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      // If the URL is relative, prepend the base URL
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+
+      // If the URL is already absolute, return it
+      if (new URL(url).origin === baseUrl) return url;
+
+      return baseUrl;
     },
   },
 };

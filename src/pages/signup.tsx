@@ -74,7 +74,7 @@ export default function SignUp() {
           {/* Logo */}
           <div className="flex justify-center mb-6">
             <div className="w-24 h-24 rounded-full border-4 border-yellow-400 flex items-center justify-center bg-yellow-400 bg-opacity-10">
-              <span className="text-5xl font-bold text-yellow-400">💪</span>
+              <span className="text-5xl font-bold text-yellow-400"></span>
             </div>
           </div>
           <h1 className="text-4xl font-bold text-white mb-2">Welcome!</h1>
@@ -120,8 +120,8 @@ export default function SignUp() {
               <option value="" className="bg-gray-800">Select your identity</option>
               <option value="admin" className="bg-gray-800">Admin</option>
               <option value="manager" className="bg-gray-800">Manager</option>
-              <option value="team_member" className="bg-gray-800">Team Member</option>
-              <option value="user" className="bg-gray-800">User</option>
+             ```` {/* <option value="team_member" className="bg-gray-800">Team Member</option>
+              <option value="user" className="bg-gray-800">User</option>```` */}
             </select>
           </div>
 

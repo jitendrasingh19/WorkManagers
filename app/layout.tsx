@@ -1,5 +1,6 @@
 import "../src/styles/globals.css";
 import SessionProvider from "./sessionProvider";
+import { Toaster } from "sonner";
 
 export const metadata = {
   title: 'Next.js',
@@ -14,7 +15,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <Toaster richColors position="top-right" />
+          {children}
+        </SessionProvider>
       </body>
     </html>
   )

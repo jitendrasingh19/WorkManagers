@@ -16,7 +16,7 @@ export default function LoginPage() {
     setLoading(true);
 
     const res = await signIn("credentials", {
-      redirect: false,
+      redirect: false, // Don't redirect automatically
       email,
       password,
     });
@@ -28,16 +28,24 @@ export default function LoginPage() {
       return;
     }
 
-    // Get session to check role
-    const sessionRes = await fetch("/api/auth/session");
-    const session = await sessionRes.json();
+    if (res?.ok) {
+      // Get the session to determine user role
+      const sessionResponse = await fetch('/api/auth/session');
+      const session = await sessionResponse.json();
 
-    if (session?.user?.role === "admin") {
-      router.push("/admin-dashboard");
-    } else if (session?.user?.role === "manager") {
-      router.push("/manager-dashboard");
-    } else {
-      router.push("/dashboard");
+      // Redirect based on role - only admins and managers can login here
+      if (session?.user?.role === 'admin') {
+        router.push('/dashboard/admin');
+      } else if (session?.user?.role === 'manager') {
+        router.push('/dashboard/manager');
+      } else if (session?.user?.role === 'member') {
+        alert("Members should use the member login page.");
+        // Sign out if member tries to login here
+        await signIn("credentials", { redirect: false });
+        router.push('/member/login');
+      } else {
+        router.push('/dashboard');
+      }
     }
   };
 
@@ -50,16 +58,23 @@ export default function LoginPage() {
         <div className="flex flex-col justify-center px-16">
 
           <h1 className="text-2xl font-bold text-cyan-600 mb-10">
-            World Gym!
+            World Gym Admin Portal
           </h1>
 
           {/* Tabs */}
           <div className="flex gap-6 mb-6">
-            <button className="font-semibold text-gray-700 border-b-2 border-cyan-500 pb-1">
-              Sign In
+            <button
+              className="font-semibold text-gray-700 border-b-2 border-cyan-500 pb-1"
+              suppressHydrationWarning={true}
+            >
+              Admin/Manager Sign In
             </button>
-            <button onClick={() => router.push('/signup')} className="text-gray-400">
-              Sign Up
+            <button
+              onClick={() => router.push('/member/login')}
+              className="text-gray-400"
+              suppressHydrationWarning={true}
+            >
+              Member Sign In
             </button>
           </div>
 
@@ -72,6 +87,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e)=>setEmail(e.target.value)}
               className="w-full border rounded-md px-4 py-2 text-sm"
+              suppressHydrationWarning={true}
             />
 
             <input
@@ -80,18 +96,20 @@ export default function LoginPage() {
               value={password}
               onChange={(e)=>setPassword(e.target.value)}
               className="w-full border rounded-md px-4 py-2 text-sm"
+              suppressHydrationWarning={true}
             />
 
             <button
-  type="submit"
-  disabled={!email || !password || loading}
-  className="w-full bg-cyan-600 disabled:bg-gray-300 text-white py-2 rounded-md"
->
-  {loading ? "Signing in..." : "SIGN IN"}
-</button>
+              type="submit"
+              disabled={!email || !password || loading}
+              className="w-full bg-cyan-600 disabled:bg-gray-300 text-white py-2 rounded-md"
+              suppressHydrationWarning={true}
+            >
+              {loading ? "Signing in..." : "SIGN IN"}
+            </button>
 
           </form>
-  
+
 
           <p className="text-xs text-gray-500 mt-4">
             Forgot your password?{" "}
@@ -112,11 +130,17 @@ export default function LoginPage() {
           {/* Social */}
           <div className="space-y-3">
 
-            <button className="w-full border rounded-md py-2 flex items-center justify-center gap-2">
+            <button
+              className="w-full border rounded-md py-2 flex items-center justify-center gap-2"
+              suppressHydrationWarning={true}
+            >
               🌐 Google
             </button>
 
-            <button className="w-full border rounded-md py-2 flex items-center justify-center gap-2">
+            <button
+              className="w-full border rounded-md py-2 flex items-center justify-center gap-2"
+              suppressHydrationWarning={true}
+            >
               📘 Facebook
             </button>
 
