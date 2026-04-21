@@ -3,12 +3,11 @@
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "baseUrl": ".",
-    "ignoreDeprecations": "6.0",
     "paths": {
-      "@/*": ["./src/*"],
       "@/components/*": ["./components/*"],
-      "@/auth": ["./src/auth.ts"],
-      "@/lib/*": ["./src/lib/*"]
+      "@/styles/*": ["./src/styles/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/auth": ["./src/auth.ts"]
     },
     "allowJs": true,
     "skipLibCheck": true,
@@ -31,3 +30,5 @@
   ],
   "exclude": ["node_modules"]
 }
+
+
