@@ -1,3 +1,5 @@
+import LandingPage from '@/components/LandingPage';
+
 export default function Home() {
-  return <h1>Welcome to Work Managers 🚀</h1>;
+  return <LandingPage />;
 }
