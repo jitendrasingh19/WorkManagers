@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,42 +12,43 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  e.preventDefault();
+  setLoading(true);
 
-    const res = await signIn("credentials", {
-      redirect: false, // Don't redirect automatically
-      email,
-      password,
-    });
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-    setLoading(false);
+  setLoading(false);
 
-    if (res?.error) {
-      alert("Invalid credentials");
-      return;
-    }
+  if (error) {
+    alert(error.message);
+    return;
+  }
 
-    if (res?.ok) {
-      // Get the session to determine user role
-      const sessionResponse = await fetch('/api/auth/session');
-      const session = await sessionResponse.json();
+  const user = data.user;
 
-      // Redirect based on role - only admins and managers can login here
-      if (session?.user?.role === 'admin') {
-        router.push('/dashboard/admin');
-      } else if (session?.user?.role === 'manager') {
-        router.push('/dashboard/manager');
-      } else if (session?.user?.role === 'member') {
-        alert("Members should use the member login page.");
-        // Sign out if member tries to login here
-        await signIn("credentials", { redirect: false });
-        router.push('/member/login');
-      } else {
-        router.push('/dashboard');
-      }
-    }
-  };
+  // Get role from your users table
+  const { data: userData, error: roleError } = await supabase
+    .from("users")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (roleError) {
+    alert("Error fetching role");
+    return;
+  }
+
+  if (userData.role === "admin") {
+    router.push("/dashboard/admin");
+  } else if (userData.role === "manager") {
+    router.push("/dashboard/manager");
+  } else {
+    router.push("/member");
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#101828] p-6">

@@ -57,10 +57,10 @@ export default async function TrainersPage({ searchParams }: any) {
         <div className="mb-6 flex gap-1 border-b border-gray-200">
           {[
             { label: "All trainers",  href: "/dashboard/admin/trainers" },
-            { label: "Schedule",      href: "/dashboard/admin/trainers/schedule" },
-            { label: "Assignments",   href: "/dashboard/admin/trainers/assignments" },
-            { label: "Performance",   href: "/dashboard/admin/trainers/performance" },
-            { label: "Documents",     href: "/dashboard/admin/trainers/documents" },
+            // { label: "Schedule",      href: "/dashboard/admin/trainers/schedule" },
+            // { label: "Assignments",   href: "/dashboard/admin/trainers/assignments" },
+            // { label: "Performance",   href: "/dashboard/admin/trainers/performance" },
+            // { label: "Documents",     href: "/dashboard/admin/trainers/documents" },
           ].map((tab) => (
             <Link
               key={tab.label}
